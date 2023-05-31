@@ -1,0 +1,152 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Email Validation API",
+    "version": "1.0.0",
+    "description": "The Email Validation API allows you to validate email addresses for their format, existence, and role. It provides information such as the email domain, validation result, existence status, role classification, and reputation.\n"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:5000/",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/email-valid": {
+      "post": {
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "summary": "Send a request for email validation",
+        "requestBody": {
+          "description": "Contains the email address to be validated",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "abc@example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful email validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "example": "abc@example.com",
+                      "description": "The validated email address"
+                    },
+                    "valid": {
+                      "type": "boolean",
+                      "example": true,
+                      "description": "Indicates if the email address is valid according to its format"
+                    },
+                    "exists": {
+                      "type": "boolean",
+                      "example": true,
+                      "description": "Indicates if the email address exists on the mail server"
+                    },
+                    "domain": {
+                      "type": "string",
+                      "example": "example.com",
+                      "description": "The domain of the email address"
+                    },
+                    "role": {
+                      "type": "string",
+                      "example": "personal",
+                      "description": "The role classification of the email address (e.g., personal, info, sales,...)"
+                    },
+                    "reputation": {
+                      "type": "string",
+                      "example": "Not Spam",
+                      "description": "The reputation classification of the email address (e.g., Not Spam, Spam)"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "250": {
+            "description": "SMTP communication successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "example": "abc@example.com",
+                      "description": "The email address used in the SMTP communication"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Invalid request format",
+                      "description": "Error message indicating an invalid request format"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Email validation failed",
+                      "description": "Error message indicating a failure during email validation"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "API-Key"
+      }
+    }
+  },
+  "tags": []
+}
